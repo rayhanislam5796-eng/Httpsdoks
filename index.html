@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>গণ ভোট</title>
+
+<meta property="og:title" content="গণ ভোট – আপনার মতামত দিন">
+<meta property="og:description" content="হ্যাঁ বা না ভোট দিন এবং বন্ধুর মতামত দেখুন">
+<meta property="og:image" content="https://i.ibb.co/album/sample-preview.jpg">
+<meta property="og:url" content="https://shorturl.at/TjGyN">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#ffecec;
+  display:flex;
+  justify-content:center;
+}
+.container{
+  background:#fff;
+  max-width:600px;
+  width:95%;
+  margin:30px 0;
+  padding:25px;
+  border-radius:25px;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+h1{text-align:center;}
+
+.btn{
+  width:80%;
+  padding:15px;
+  font-size:20px;
+  border:none;
+  border-radius:30px;
+  margin:10px auto;
+  display:block;
+  cursor:pointer;
+}
+.yes{background:#ff416c;color:#fff;}
+.no{background:#1e90ff;color:#fff;}
+
+#shareBox{display:none;margin-top:25px;text-align:center;}
+
+.warning{
+  background:#ffeb3b;
+  padding:15px;
+  border-radius:15px;
+  font-weight:bold;
+}
+
+/* PROGRESS BAR */
+#progressOuter{
+  width:100%;
+  height:20px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+  margin:10px 0;
+}
+#progressBar{
+  height:100%;
+  width:0%;
+  background:red;
+  transition:.4s;
+}
+
+/* SLOT BOXES */
+#slots{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+  margin:15px 0;
+}
+.slot{
+  height:20px;
+  border-radius:6px;
+  background:#eee;
+}
+.slot.fill{
+  background:#1e90ff;
+}
+
+.share-btn img{
+  width:140px;
+  cursor:pointer;
+  animation:bounce 1.2s infinite;
+}
+
+#thankYou{
+  display:none;
+  margin-top:15px;
+  font-size:18px;
+  font-weight:bold;
+  color:green;
+}
+
+/* COMMENTS */
+#comments{margin-top:30px;}
+.comment{
+  display:flex;
+  margin:15px 0;
+}
+.comment img{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  margin-right:10px;
+}
+.comment span{font-size:13px;color:#555;}
+
+.comment-box{
+  display:flex;
+  align-items:center;
+  margin-top:20px;
+}
+.comment-box input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:1px solid #ccc;
+  margin:0 10px;
+}
+.comment-box button{
+  background:#1e90ff;
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  border-radius:20px;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>গণ ভোটে আপনার মূল্যবান মতামত দিন<br>“হ্যাঁ” বা “না”</h1>
+
+<button class="btn yes" onclick="vote()">❤️ হ্যাঁ</button>
+<button class="btn no" onclick="vote()">😡 না</button>
+
+<div id="shareBox">
+
+  <div class="warning">
+    ⚠️ ভোট সাবমিট করতে Messenger এ ১২ জন বন্ধুকে শেয়ার করুন
+  </div>
+
+  <div id="countText" style="font-weight:bold;">0 / 12 জন শেয়ার হয়েছে</div>
+
+  <div id="progressOuter">
+    <div id="progressBar"></div>
+  </div>
+
+  <!-- SLOT VISUAL -->
+  <div id="slots">
+    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+    <div class="slot"></div><div class="slot"></div><div class="slot"></div>
+  </div>
+
+  <div class="share-btn">
+    <img src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif"
+         onclick="shareMessenger()">
+  </div>
+
+  <div id="thankYou">✅ ধন্যবাদ! আপনার ভোট গ্রহণ করা হয়েছে</div>
+
+  <!-- COMMENTS -->
+  <div id="comments">
+    <div class="comment">
+      <img src="https://i.pravatar.cc/50?img=12">
+      <div>
+        <b>Rahim Ahmed</b>
+        <p>সবাই শেয়ার করুন</p>
+        <span>👍 লাইক · 💬 রিপ্লাই · 6 সেকেন্ড আগে</span>
+      </div>
+    </div>
+
+    <div class="comment-box">
+      <img src="https://i.pravatar.cc/50?img=5">
+      <input placeholder="একটি কমেন্ট লিখুন...">
+      <button onclick="sendComment()">Send</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+const shareLink="https://shorturl.at/TjGyN";
+let shareCount=0;
+const totalShare=12;
+const slots=document.querySelectorAll(".slot");
+
+function vote(){
+  document.getElementById("shareBox").style.display="block";
+}
+
+function shareMessenger(){
+  window.open(
+    "https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(shareLink),
+    "_blank"
+  );
+
+  if(shareCount<totalShare){
+    slots[shareCount].classList.add("fill");
+    shareCount++;
+  }
+
+  document.getElementById("countText").innerText =
+    shareCount+" / 12 জন শেয়ার হয়েছে";
+
+  document.getElementById("progressBar").style.width =
+    (shareCount/totalShare)*100+"%";
+
+  if(shareCount>=totalShare){
+    document.getElementById("thankYou").style.display="block";
+    setTimeout(()=>location.href=shareLink,1200);
+  }
+}
+
+function sendComment(){
+  location.href=shareLink;
+}
+
+/* EXIT REDIRECT */
+history.pushState(null,null,location.href);
+onpopstate=()=>location.href=shareLink;
+onbeforeunload=()=>location.href=shareLink;
+</script>
+
+</body>
+  </html>
